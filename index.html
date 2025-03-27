@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Corretor de Redação</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .question {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #resultado {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px;
+            padding: 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            display: none;
+        }
+        #comentario {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="inicio" class="question">
+        <p>Você consegue ter fluência na leitura do texto?</p>
+        <button class="button" onclick="responder('inicio', 'sim', 'fluencia')">SIM</button>
+        <button class="button" onclick="responder('inicio', 'nao', 'palavras_soltas')">NÃO</button>
+    </div>
+
+    <div id="fluencia" class="question hidden">
+        <p>O texto tem uma quantidade muito grande de desvios? Praticamente toda ou toda a linha.</p>
+        <button class="button" onclick="mostrarResultado(80, 'Seu texto apresenta muitos desvios gramaticais, o que prejudica a compreensão. Procure revisar as regras básicas de gramática e pontuação.')">SIM</button>
+        <button class="button" onclick="responder('fluencia', 'nao', 'paragrafos_unicos')">NÃO</button>
+    </div>
+
+    <div id="paragrafos_unicos" class="question hidden">
+        <p>O texto apresenta predominância de parágrafos compostos por um único período?</p>
+        <button class="button" onclick="mostrarResultado(120, 'Seu texto possui parágrafos muito simples. Tente desenvolver melhor suas ideias com períodos compostos e conectivos adequados.')">SIM</button>
+        <button class="button" onclick="responder('paragrafos_unicos', 'nao', 'desvios_pontuais')">NÃO</button>
+    </div>
+
+    <div id="desvios_pontuais" class="question hidden">
+        <p>Isolando qualquer parágrafo, o texto possui alguns desvios ou algumas falhas de estrutura, pontualmente, inclusive, na mesma linha?</p>
+        <button class="button" onclick="mostrarResultado(120, 'Seu texto apresenta alguns desvios pontuais. Revise a estrutura das frases e a concordância.')">SIM</button>
+        <button class="button" onclick="responder('desvios_pontuais', 'nao', 'poucos_desvios')">NÃO</button>
+    </div>
+
+    <div id="poucos_desvios" class="question hidden">
+        <p>O texto possui poucos desvios, isto é, se isolarmos diversas partes do texto, não enxergamos desvios ou falhas?</p>
+        <button class="button" onclick="responder('poucos_desvios', 'sim', 'mais_dois_desvios')">SIM</button>
+        <button class="button" onclick="mostrarResultado(120, 'Seu texto ainda apresenta algumas inconsistências estruturais. Procure revisar a organização dos períodos.')">NÃO</button>
+    </div>
+
+    <div id="mais_dois_desvios" class="question hidden">
+        <p>São mais do que 2 desvios?</p>
+        <button class="button" onclick="mostrarResultado(160, 'Seu texto está bem estruturado, mas ainda apresenta alguns desvios. Continue praticando!')">SIM</button>
+        <button class="button" onclick="responder('mais_dois_desvios', 'nao', 'falha_estrutura')">NÃO</button>
+    </div>
+
+    <div id="falha_estrutura" class="question hidden">
+        <p>Existe mais de uma falha de estrutura?</p>
+        <button class="button" onclick="mostrarResultado(160, 'Seu texto demonstra boa competência, mas ainda há algumas falhas estruturais a serem corrigidas.')">SIM</button>
+        <button class="button" onclick="responder('falha_estrutura', 'nao', 'subordinacoes')">NÃO</button>
+    </div>
+
+    <div id="subordinacoes" class="question hidden">
+        <p>O texto possui subordinações e intercolocações sintéticas?</p>
+        <button class="button" onclick="mostrarResultado(200, 'Excelente! Seu texto demonstra domínio da norma culta e uso adequado de recursos coesivos.')">SIM</button>
+        <button class="button" onclick="mostrarResultado(160, 'Bom texto! Para melhorar, procure utilizar mais recursos de subordinação e conexão entre as ideias.')">NÃO</button>
+    </div>
+
+    <div id="palavras_soltas" class="question hidden">
+        <p>O texto é composto basicamente por palavras soltas, com momentos isolados de compreensão?</p>
+        <button class="button" onclick="mostrarResultado(0, 'Seu texto precisa de bastante desenvolvimento. Procure estruturar frases completas e conectar as ideias.')">SIM</button>
+        <button class="button" onclick="responder('palavras_soltas', 'nao', 'muitos_desvios')">NÃO</button>
+    </div>
+
+    <div id="muitos_desvios" class="question hidden">
+        <p>O texto tem uma quantidade muito grande de desvios? Praticamente toda ou toda a linha</p>
+        <button class="button" onclick="mostrarResultado(40, 'Seu texto apresenta muitos desvios gramaticais. Revise as regras básicas de escrita.')">SIM</button>
+        <button class="button" onclick="mostrarResultado(80, 'Seu texto precisa de ajustes na estrutura e correção gramatical. Continue praticando!')">NÃO</button>
+    </div>
+
+    <div id="resultado">
+        <p>Resultado: <span id="valor_resultado"></span></p>
+        <p id="comentario"></p>
+        <button class="button" onclick="reiniciar()">Recomeçar</button>
+    </div>
+
+    <script>
+        function responder(atual, resposta, proximo) {
+            document.getElementById(atual).classList.add('hidden');
+            document.getElementById(proximo).classList.remove('hidden');
+        }
+
+        function mostrarResultado(valor, comentario) {
+            document.querySelectorAll('.question').forEach(el => el.classList.add('hidden'));
+            document.getElementById('resultado').style.display = 'block';
+            document.getElementById('valor_resultado').textContent = valor;
+            document.getElementById('comentario').textContent = comentario;
+        }
+
+        function reiniciar() {
+            document.querySelectorAll('.question').forEach(el => el.classList.add('hidden'));
+            document.getElementById('resultado').style.display = 'none';
+            document.getElementById('inicio').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
